@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import CardList from './components/card-list/card-list.component';
+import SearchBox from './components/search-box/search-box.component';
 
 class App extends Component {
   constructor() {
@@ -9,11 +11,11 @@ class App extends Component {
       monsters: [],
       searchField: '',
     }
-    console.log('constructor')
+    // console.log('constructor')
   }
   
   componentDidMount() {
-    console.log('componentDidMount')
+    // console.log('componentDidMount')
     fetch('https://jsonplaceholder.typicode.com/users')
     .then(response => response.json())
     .then(users => this.setState(
@@ -21,11 +23,12 @@ class App extends Component {
         return {monsters: users}
       },
       () => {
-        console.log(this.state)
+        //only happens when the setstate is update
+        // console.log(this.state)
       }
       ))
   }
-
+  // more performace as the extra fuctions are not rendered
   onSearchChange  = (event) => {
     const searchField = event.target.value.toLowerCase();
     this.setState(() => {
@@ -34,8 +37,8 @@ class App extends Component {
   }
 
   render() {
-    console.log('render')
-    // destructuring makes it  more readbale and the varaible are intialised 
+    // console.log('render')
+    //destructuring makes it  more readbale and the varaible are intialised 
     const {monsters,searchField} = this.state;
     const {onSearchChange} = this;
     const filteredMonsters = monsters.filter((monster) => {
@@ -44,22 +47,12 @@ class App extends Component {
 
     return (
       <div className="App">
-      <input 
-      className="search-box" 
-      type='search' 
-      placeholder="search monsters" 
-      onChange={ onSearchChange}
-      />
-      {filteredMonsters.map((monster) => {
-          return (
-            <div key={monster.id}>
-             <h1>{monster.name}</h1> 
-            </div>
-          )
-
-        })
-      }
-
+      <SearchBox  
+      onChangeHandler={onSearchChange} 
+      placeholders="search monsters" 
+      className= "serarch-box" 
+      / >
+      < CardList monsters={filteredMonsters} /> 
       </div>
     );
   }
